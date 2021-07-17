@@ -1,0 +1,58 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+}
+
+.controls-wrapper {
+  height: 10%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: cyan;
+}
+
+.grid-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: darkgoldenrod;
+}
+
+.game-grid {
+  height: 100%;
+  width:80%;
+  display: flex; 
+  flex-wrap: wrap;
+  margin: 40px 0px;
+  border: 5px solid lightgrey;
+}
+
+.game-grid div {  
+  border: 1px solid lightgrey;
+  height: 10%;
+  width: 10%;
+}
+
+.game-grid div.fighter {
+  /* background-image: url('');
+  background-repeat: no-repeat;
+  background-size: contain; */
+  background-color: darkred;
+} 
+
+.game-grid div.player {
+  /* background-image: url('');
+  background-repeat: no-repeat;
+  background-size: contain; */
+  background-color: darkred;
+}
+
+
+
+
