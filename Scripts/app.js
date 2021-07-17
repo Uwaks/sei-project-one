@@ -24,6 +24,10 @@ createGrid()
 // * Game Variables
 const fighterStart = [cells[12], cells[13], cells[14], cells[15], cells[16], cells[22], cells[23], cells[24], cells[25], cells[26], cells[32], cells[33], cells[34], cells[35], cells[36]]
 
+const fighterPosition = [12, 13, 14, 15, 16, 22, 23, 24, 25, 26, 32, 33, 34, 35, 36]
+
+let playerPosition = 94
+
 // * Functions
 function createFighters () {
   fighterStart.forEach(fighter => {
@@ -36,20 +40,21 @@ function createPlayer () {
 }
 
 function removeFighters () {
-  const fighterPosition = fighterStart
   fighterPosition.forEach(fighter => {
     fighter.classList.remove('fighter')
   })
 }
 
 function addFighters () {
-  
+
 }
 
 function fighterMovement () {
-  setInterval(() => {
-    console.log('move fighters')
-  }, 1000)
+
+}
+
+function playerMovement () {
+
 }
 
 function gameStart () {  
@@ -60,9 +65,28 @@ function gameStart () {
   fighterMovement()
 }
 
+function addPlayer () {
+  cells[playerPosition].classList.add('player')
+}
+
+function removePlayer () {
+  cells[playerPosition].classList.remove('player')
+}
+
 
 function handleKeyUp (e) {
-  console.log('Key Up!', e.keyCode)  
+  
+  removePlayer()
+  switch(e.keyCode) {
+    case 39:
+      playerPosition++  
+      break
+    case 37:
+      playerPosition--
+      break    
+  }
+  addPlayer()
+
 }
 
 // * Events
