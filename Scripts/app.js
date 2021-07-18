@@ -22,19 +22,16 @@ function createGrid () {
 createGrid()
 
 // * Game Variables
-const fighterStart = [cells[12], cells[13], cells[14], cells[15], cells[16], cells[22], cells[23], cells[24], cells[25], cells[26], cells[32], cells[33], cells[34], cells[35], cells[36]]
-
-let fighterPosition = [12, 13, 14, 15, 16, 22, 23, 24, 25, 26, 32, 33, 34, 35, 36]
-
+let fighterIndex = [12, 13, 14, 15, 16, 22, 23, 24, 25, 26, 32, 33, 34, 35, 36]
 let playerPosition = 94
+let fleetPosition
 
 // * Functions
 
 //* Create Fighters & Player
 function createFighters () {
-  fighterStart.forEach(fighter => {
-    fighter.classList.add('fighter')
-  })
+  for (let i = 0; i < fighterIndex.length; i++)
+    cells[fighterIndex[i]].classList.add('fighter')
 }
 
 function createPlayer () {
@@ -43,22 +40,25 @@ function createPlayer () {
 
 // * Fighter Fleet Movement
 function removeFighters () {
-  fighterStart.forEach(fighter => {
-    fighter.classList.remove('fighter')
-  })
+  for (let i = 0; i < fighterIndex.length; i++)
+    cells[fighterIndex[i]].classList.remove('fighter')
 }
 
-function addFighters () {
-  fighterPosition.forEach(fighter => {
-    fighter.classList.add('fighter')
+function moveDown () {
+  fighterIndex.map(fighter => {
+    fighter += 10
+    cells[fighter].classList.add('fighter')
   })
 }
 
 function moveRight () {
-  fighterPosition.map(fighter => {
-    return fighter += 1   
-  })
-}
+  const x = fleetPosition % width
+  if (x < width - 1) {
+    fleetPosition = fighterIndex.map(fighter => {
+      fighter += 1 
+      cells[fighter].classList.add('fighter')
+    })
+  }}
 
 function moveLeft () {
   fighterPosition.map(fighter => {
@@ -66,14 +66,11 @@ function moveLeft () {
   })
 }
 
-function moveDown () {
-  fighterPosition.map(fighter => {
-    return fighter += 10
-  })
-}
+
 
 function fighterMovement () {
   setInterval(() => {
+    moveRight()
     // move right till x < width - 1
     // move down 1 row
     // move left until x > 0
