@@ -53,6 +53,10 @@ body {
   background-color: darkred;
 }
 
+.game-grid div.laser-beam {
+  background-color: blueviolet;
+}
+
 
 
 

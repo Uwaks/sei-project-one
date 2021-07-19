@@ -24,10 +24,9 @@ createGrid()
 // ***** Game Variables *****
 let fighterIndex = [12, 13, 14, 15, 16, 22, 23, 24, 25, 26, 32, 33, 34, 35, 36]
 let playerPosition = 94
-let fleetPosition
 
 
-// ***** Functions *****
+// ***** Game-play Functions *****
 
 //* Create Fighters & Player
 function createFighters () {
@@ -37,7 +36,7 @@ function createFighters () {
 }
 
 function createPlayer () {
-  return cells[playerPosition].classList.add('player')
+  cells[playerPosition].classList.add('player')
 }
 
 // ***** Game Start *****
@@ -45,35 +44,23 @@ function gameStart () {
   score.innerHTML = 0
   lifeCount.innerHTML = 0
   createFighters()
-  // createPlayer()
-  // fighterMovement()
+  createPlayer()
+  fighterMovement()
 }
 
 // ***** Alien Functionality *****
-
-// * Fighter Fleet Movement
-// function removeFighters () {
-//   fighterIndex.map(index => {
-//     index +=
-//     cells[index].classList.remove('fighter')
-//   })
-// }
-
-function moveDown () {
-  fleetPosition = fighterIndex.map(index => {
-    index += width
-    cells[fleetPosition].classList.add('fighter')
+function removeFighters () {
+  cells.forEach(cell => {
+    return cell.classList.remove('fighter')      
   })
 }
 
-// function moveRight () {
-//   const x = fleetPosition % width
-//   if (x < width - 1) {
-//     fleetPosition = fighterIndex.map(fighter => {
-//       fighter += 1 
-//       cells[fighter].classList.add('fighter')
-//     })
-//   }}
+function moveDown () {
+  fighterIndex = fighterIndex.map(fighter => {    
+    cells[fighter].classList.add('fighter')
+    return fighter += width
+  })
+}
 
 function moveRight () {
   fighterIndex = fighterIndex.map(fighter => {
@@ -90,22 +77,15 @@ function moveLeft () {
   
 }
 
+// * Fighter Fleet Movement
 function fighterMovement () { 
   setInterval(() => {
-    cells.forEach(cell => {
-      return cell.classList.remove('fighter')      
-    })
-    fighterIndex = fighterIndex.map(fighter => {
-      cells[fighter].classList.add('fighter')
-      return fighter + 1      
-    })  
+    removeFighters()
+    moveRight()  
   }, 1000)
-  console.log('This isn\'t working!!!')
-  // }) 
-  
     
   // move right till x < width - 1
-  // where const x = fleetPosition % width
+  // where const x = fighterIndex % width
   // move down 1 row
   // move left until x > 0
   // move down 1 row
@@ -168,24 +148,30 @@ function movePlayer (e) {
 }
 
 // * Shooting
+
+
 function playerFire (e) {
-  if (e.keyCode === 88) {
-    console.log('player shooting')
+  if (e.keyCode === 88) {  
+    let gunPosition = playerPosition - width  
+    setInterval(() => {
+      cells[gunPosition].classList.remove('laser-beam')
+      cells[gunPosition].classList.add('laser-beam')
+      gunPosition -= width
+    }, 1000)
   }
   
-  // setInterval(()=> {
-  //   keyCode event 'keyup' for x
-  //   move up from playerPosition until:
-  //     hit a fighter
-  //     reach top row
-  //   remove
-  // })
+  
+  // // keyCode event 'keyup' for x
+  // move up from playerPosition until:
+  //   hit a fighter
+  //   reach top row
+  // remove  
 }
 
 //* Dying
 
 
-// ***** Events *****
+// * Events
 startBtn.addEventListener('click', gameStart)
 window.addEventListener('keyup', movePlayer)
 window.addEventListener('keyup', playerFire)
