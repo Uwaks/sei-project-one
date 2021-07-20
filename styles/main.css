@@ -50,7 +50,8 @@ body {
   /* background-image: url('');
   background-repeat: no-repeat;
   background-size: contain; */
-  background-color: darkred;
+  background-color: rgb(2, 59, 50);
+  border-radius: 10%;
 }
 
 .game-grid div.laser-beam {

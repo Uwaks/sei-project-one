@@ -24,6 +24,7 @@ createGrid()
 // ***** Game Variables *****
 let fighterIndex = [12, 13, 14, 15, 16, 22, 23, 24, 25, 26, 32, 33, 34, 35, 36]
 let playerPosition = 94
+let movingRight = true
 
 
 // ***** Game-play Functions *****
@@ -39,7 +40,7 @@ function createPlayer () {
   cells[playerPosition].classList.add('player')
 }
 
-// ***** Game Start *****
+// * Game Start 
 function gameStart () {  
   score.innerHTML = 0
   lifeCount.innerHTML = 0
@@ -47,6 +48,12 @@ function gameStart () {
   createPlayer()
   fighterMovement()
 }
+
+// * Game Over Conditions
+// Player wins
+//  Destroys all aliens fighters
+// Player loses
+//  Loses 3 lives (lives = 0)
 
 // ***** Alien Functionality *****
 function removeFighters () {
@@ -63,6 +70,7 @@ function moveDown () {
 }
 
 function moveRight () {
+  movingRight
   fighterIndex = fighterIndex.map(fighter => {
     cells[fighter].classList.add('fighter')
     return fighter + 1
@@ -70,6 +78,7 @@ function moveRight () {
 }
 
 function moveLeft () {
+  movingRight = false
   fighterIndex = fighterIndex.map(fighter => {
     cells[fighter].classList.add('fighter')
     return fighter - 1
@@ -84,13 +93,15 @@ function fighterMovement () {
     moveRight()  
   }, 1000)
     
-  // move right till x < width - 1
   // where const x = fighterIndex % width
+  // move right till x < width - 1
+  // reachRightEdge = movingRight && x < width - 1
   // move down 1 row
   // move left until x > 0
-  // move down 1 row
-  // repeat
-  // 
+  // reachLeftEdge = !movingRight && x > 0
+  // move down 1 row 
+  // if x > 0 moveRight
+  // else if x < width - 1 moveleft
 }
 
 // * Bombing
@@ -149,27 +160,41 @@ function movePlayer (e) {
 
 // * Shooting
 
-
 function playerFire (e) {
   if (e.keyCode === 88) {  
-    let gunPosition = playerPosition - width  
-    setInterval(() => {
-      cells[gunPosition].classList.remove('laser-beam')
-      cells[gunPosition].classList.add('laser-beam')
-      gunPosition -= width
-    }, 1000)
+    let laserPosition = playerPosition
+    const laserId = setInterval(() => {
+      const y = Math.floor(laserPosition / width)
+      if (y > 0) {
+        cells[laserPosition].classList.remove('laser-beam') 
+        laserPosition -= width
+        cells[laserPosition].classList.add('laser-beam')
+      } else {
+        cells[laserPosition].classList.remove('laser-beam')
+        clearInterval(laserId)
+      }
+    }, 500)  
+    
+    // Hit conditions & outcomes
+    if (cells[laserPosition].classList.contains('fighter', 'laser-beam')) {
+      cells[laserPosition].classList.remove('fighter')
+      //  explosion sound & visual
+      //  update score 
+    }    
   }
-  
-  
+
   // // keyCode event 'keyup' for x
   // move up from playerPosition until:
   //   hit a fighter
-  //   reach top row
-  // remove  
+  //   // reach top row
+  // // remove  
 }
 
-//* Dying
-
+//* Player Dies
+// if player && fighter class in same div
+// Stop game, reset game, update lives with lives - 1
+// Place gameplay inside a while loop with conditionals using isAlive
+// isAlive = false
 
 // * Events
 startBtn.addEventListener('click', gameStart)
