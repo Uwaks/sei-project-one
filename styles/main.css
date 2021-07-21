@@ -37,6 +37,7 @@ body {
   border: 1px solid lightgrey;
   height: 10%;
   width: 10%;
+  border-radius: 40%;
 }
 
 .game-grid div.fighter {

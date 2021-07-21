@@ -4,6 +4,8 @@ const startBtn = document.querySelector('#start')
 const score = document.querySelector('#score span')
 const lifeCount = document.querySelector('#life-count span')
 const cells = []
+let newScore = 0
+let deadFighters = []
 
 // ***** Grid Variables *****
 const width = 10
@@ -13,7 +15,7 @@ const cellCount = width * width
 function createGrid () {
   for (let i = 0; i < cellCount; i++) {
     const cell = document.createElement('div')
-    cell.textContent = i
+    // cell.textContent = i
     gameGrid.appendChild(cell)
     cells.push(cell)
   }  
@@ -25,6 +27,7 @@ createGrid()
 let fighterIndex = [12, 13, 14, 15, 16, 22, 23, 24, 25, 26, 32, 33, 34, 35, 36]
 let playerPosition = 94
 let movingRight = true
+let isAlive = true 
 
 
 // ***** Game-play Functions *****
@@ -46,12 +49,12 @@ function gameStart () {
   lifeCount.innerHTML = 0
   createFighters()
   createPlayer()
-  fighterMovement()
+  fleetMovement()
 }
 
 // * Game Over Conditions
 // Player wins
-//  Destroys all aliens fighters
+//  Destroy all aliens fighters
 // Player loses
 //  Loses 3 lives (lives = 0)
 
@@ -70,15 +73,21 @@ function moveDown () {
 }
 
 function moveRight () {
-  movingRight
+  movingRight  
   fighterIndex = fighterIndex.map(fighter => {
-    cells[fighter].classList.add('fighter')
-    return fighter + 1
+    if (cells[fighter].classList.contains('dead-fighter')) {
+      console.log(fighter)
+      return
+    } else {
+      console.log(fighter)
+      cells[fighter].classList.add('fighter')
+      return fighter + 1
+    }
   })
 }
 
 function moveLeft () {
-  movingRight = false
+  !movingRight 
   fighterIndex = fighterIndex.map(fighter => {
     cells[fighter].classList.add('fighter')
     return fighter - 1
@@ -87,11 +96,21 @@ function moveLeft () {
 }
 
 // * Fighter Fleet Movement
-function fighterMovement () { 
+function fleetMovement () { 
+  // const x = fighterIndex % width
+  // const reachRightEdge = movingRight && x < width - 1
+  // const reachLeftEdge = !movingRight && x > 0
   setInterval(() => {
     removeFighters()
-    moveRight()  
-  }, 1000)
+    moveRight() 
+    // if ((reachRightEdge || reachLeftEdge)) {
+    //   moveDown()
+    // } else if (x > 0) {
+    //   moveRight()
+    // } else if (x < width - 1) {
+    //   moveLeft()
+    // }
+  }, 7000)
     
   // where const x = fighterIndex % width
   // move right till x < width - 1
@@ -100,31 +119,21 @@ function fighterMovement () {
   // move left until x > 0
   // reachLeftEdge = !movingRight && x > 0
   // move down 1 row 
-  // if x > 0 moveRight
-  // else if x < width - 1 moveleft
+  // if (reachRightEdge || reachLeftEdge) {
+  //   moveDown()
+  // }
+  // else if (x > 0) {
+  // moveRight()
+  // }
+  // else if (x < width - 1) {
+//     moveLeft()
+//   }  
 }
 
 // * Bombing
 
-function enemyShotMoves() { 
-  // const intervalId = setInterval(() => {
-  //   removeEnemyShot()
-  //   enemyShotArray = enemyShotArray.map(shot => {
-  //     if (shot === playerPosition) {
-  //       clearInterval(intervalId)
-  //     } else if (shot > 99) {
-  //       enemyShotArray.pop(enemyShotArray[enemyShotArray.length - (enemyShotArray.length - 1)])
-  //     } else
-  //       return shot + 10
-  //   })
-  //   })
-  //   if (enemyShotArray[enemyShotArray.length - 1] === playerPosition) {
-  //     clearInterval(intervalId)
-  //   } else if (enemyShotArray[enemyArray.length - 1] > 99) {
-  //     enemyShotArray.pop(enemyShotArray[enemyShotArray.length - (enemyShotArray.length - 1)])
-  //   }  
-  //   addEnemyShot()
-  // }, 1000)
+function alienFire() { 
+  
 }
 
 //* Destruction
@@ -159,6 +168,10 @@ function movePlayer (e) {
 }
 
 // * Shooting
+function updateScore(){
+  score.innerHTML = newScore
+  return score
+}
 
 function playerFire (e) {
   if (e.keyCode === 88) {  
@@ -173,27 +186,39 @@ function playerFire (e) {
         cells[laserPosition].classList.remove('laser-beam')
         clearInterval(laserId)
       }
-    }, 500)  
-    
-    // Hit conditions & outcomes
-    if (cells[laserPosition].classList.contains('fighter', 'laser-beam')) {
-      cells[laserPosition].classList.remove('fighter')
-      //  explosion sound & visual
-      //  update score 
-    }    
+      // Hit Conditions & Outcomes
+      if (cells[laserPosition].classList.contains('fighter')) {
+        cells[laserPosition].classList.remove('fighter')
+        // cells[laserPosition].classList.add('dead-fighter')
+        cells[laserPosition].classList.remove('laser-beam')        
+        //  explosion sound & visual
+
+        const shotFighter = fighterIndex.indexOf(laserPosition)
+        deadFighters.push(shotFighter)
+
+        newScore += 10 
+        updateScore(newScore)
+        clearInterval(laserId)
+      }  
+    }, 500)          
   }
 
+  
   // // keyCode event 'keyup' for x
   // move up from playerPosition until:
   //   hit a fighter
-  //   // reach top row
+  //   reach top row
   // // remove  
 }
 
 //* Player Dies
 // if player && fighter class in same div
-// Stop game, reset game, update lives with lives - 1
-// Place gameplay inside a while loop with conditionals using isAlive
+// if (cells[playerPosition].classsList.contains('player', 'fighter')) {
+// Stop game (isAlive = false)
+// reset game
+// update lives (lives - 1)
+// }
+// Place gameplay inside a while loop/if statement with conditionals using isAlive (let isAlive = true)
 // isAlive = false
 
 // * Events
