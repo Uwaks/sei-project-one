@@ -4,6 +4,7 @@ const startBtn = document.querySelector('#start')
 const score = document.querySelector('#score span')
 const lifeCount = document.querySelector('#life-count span')
 const cells = []
+const deadFighters = []
 let newScore = 0
 
 // ***** Grid Variables *****
@@ -34,11 +35,12 @@ function createFighters () {
     cells[index].classList.add('fighter')
   })
 }
+
 function createPlayer () {
   cells[playerPosition].classList.add('player')
 }
 
-// * Game Start 
+// * Game Start Functions & Settings
 function gameStart () {  
   score.innerHTML = 0
   lifeCount.innerHTML = 0
@@ -48,26 +50,37 @@ function gameStart () {
 }
 
 // * Game Over Conditions
-// if (fighterIndex === 0) {
-//   displayResult.innerHTML = 'You Win!!'
+// function gameOver (x) {
+//   if (x = playerWins) {
+
+//   } else {
+
+//   }
 // }
-// Player wins
-//  Destroys all aliens fighters
-// Player loses
-//  Loses 3 lives (lives = 0)
+// if (fighterIndex === 0) {
+//     displayResult.innerHTML = 'You Win!!'      
+// } else if (cells[playerPosition].classList.contains('fighter')) {
+//   displayResult.innerHTML = 'You lose!!'
+// } else if (player dies) {
+//   displayResult.innerHTML = 'You lose!!'
+// }
+
 
 // ***** Alien Functionality *****
+
 function removeFighters () {
   cells.forEach(cell => {
     cell.classList.remove('fighter')      
   })
 }
+
 function moveDown () {
   fighterIndex = fighterIndex.map(fighter => {    
     cells[fighter].classList.add('fighter')
     return fighter += width
   })
 }
+
 function moveRight () {
   movingRight
   cells.forEach(cell => {
@@ -78,6 +91,7 @@ function moveRight () {
     return fighter + 1
   })
 }
+
 function moveLeft () {
   movingRight = false
   fighterIndex = fighterIndex.forEach(fighter => {
@@ -87,12 +101,13 @@ function moveLeft () {
     // }
   })
 }
+
 // * Fighter Fleet Movement
 function fighterMovement () { 
   setInterval(() => {
     // removeFighters()
     moveRight()  
-  }, 3000)
+  }, 1000)
   // where const x = fighterIndex % width
   // move right till x < width - 1
   // reachRightEdge = movingRight && x < width - 1
@@ -106,8 +121,39 @@ function fighterMovement () {
 
 // * Bombing
 function fighterBomb() { 
-  
+  // // generate random number from fighterIndex to assign bomber
+  // // release bomb
+  // hit player
+  // // miss player
+  const bomberId = setInterval(() => {
+    
+    const bomber = fighterIndex[Math.floor((Math.random() * fighterIndex.length))]
+    if (cells[bomber].classList.contains('fighter')) {
+      let bombPosition = cells.indexOf(cells[bomber])
+      const bombId = setInterval(() => { 
+        const y = Math.floor(bombPosition / width)
+        if (y < width - 1) {
+          // bomb sound
+          cells[bombPosition].classList.remove('bomb') 
+          bombPosition += width
+          cells[bombPosition].classList.add('bomb')
+
+          // Player Destruction Conditions & Outcomes
+          if (cells[bombPosition].classList.contains('player')) {
+            clearInterval(bombId)
+          }
+        } else {
+          cells[bombPosition].classList.remove('bomb')
+        }
+        // }
+      }, 1000)      
+    }
+    
+    // clearInterval(bomberId)
+    // Player wins
+  }, 2000)
 }
+fighterBomb()
 
 
 // ***** Player Functionality *****
@@ -156,33 +202,36 @@ function playerFire (e) {
         
         //  Fighter Destruction Conditions & Outcomes
         if (cells[laserPosition].classList.contains('fighter')) {
+          
           cells[laserPosition].classList.remove('fighter')
           cells[laserPosition].classList.remove('laser-beam')
-          console.log(laserPosition)
           fighterIndex = fighterIndex.filter(fighter => fighter !== laserPosition + 1)
           clearInterval(laserId)
           //  explosion sound & visual
           newScore += 10
           updateScore(newScore)
+
+          if (fighterIndex.length === 0) {
+            console.log('game over')
+            // gameOver(playerWins)
+          }
+
         } 
       } else {
         cells[laserPosition].classList.remove('laser-beam')
         clearInterval(laserId)
       }
-    }, 500)  
-  // // keyCode event 'keyup' for x
-  // move up from playerPosition until:
-  //   hit a fighter
-  //   // reach top row
-  // // remove  
+    }, 500)
   }
 
   //* Player Dies
-  // if player && fighter class in same div
+  // if (cells[playerPosition].classList.contains('fighter')) {
   // Stop game, reset game, update lives with lives - 1
+  // } 
   // Place gameplay inside a while loop with conditionals using isAlive
   // isAlive = false
-  // * Events
+
+  // ***** Events *****
 }
 startBtn.addEventListener('click', gameStart)
 window.addEventListener('keyup', movePlayer)
