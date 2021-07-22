@@ -3,8 +3,10 @@ const gameGrid = document.querySelector('.game-grid')
 const startBtn = document.querySelector('#start')
 const score = document.querySelector('#score span')
 const lifeCount = document.querySelector('#life-count span')
+const gameScreen = document.querySelector('#game-screen')
+const winner = document.querySelector('#game-won')
+const loser = document.querySelector('#game-lost')
 const cells = []
-const deadFighters = []
 let newScore = 0
 
 // ***** Grid Variables *****
@@ -25,7 +27,6 @@ createGrid()
 // ***** Game Variables *****
 let fighterIndex = [12, 13, 14, 15, 16, 22, 23, 24, 25, 26, 32, 33, 34, 35, 36]
 let playerPosition = 94
-let movingRight = true
 
 // ***** Game-play Functions *****
 
@@ -43,90 +44,45 @@ function createPlayer () {
 // * Game Start Functions & Settings
 function gameStart () {  
   score.innerHTML = 0
-  lifeCount.innerHTML = 0
+  lifeCount.innerHTML = 1
   createFighters()
   createPlayer()
   fighterMovement()
+  fighterBomb()
 }
 
 // * Game Over Conditions
-// function gameOver (x) {
-//   if (x = playerWins) {
-
-//   } else {
-
-//   }
-// }
-// if (fighterIndex === 0) {
-//     displayResult.innerHTML = 'You Win!!'      
-// } else if (cells[playerPosition].classList.contains('fighter')) {
-//   displayResult.innerHTML = 'You lose!!'
-// } else if (player dies) {
-//   displayResult.innerHTML = 'You lose!!'
-// }
-
-
+function playerWins () { 
+  gameScreen.classList.add('no-show')
+  winner.classList.remove('no-show')
+}
+function playerLoses () {
+  gameScreen.classList.add('no-show')
+  loser.classList.remove('no-show')
+}
 // ***** Alien Functionality *****
-
-function removeFighters () {
-  cells.forEach(cell => {
-    cell.classList.remove('fighter')      
-  })
-}
-
-function moveDown () {
-  fighterIndex = fighterIndex.map(fighter => {    
-    cells[fighter].classList.add('fighter')
-    return fighter += width
-  })
-}
-
-function moveRight () {
-  movingRight
-  cells.forEach(cell => {
-    cell.classList.remove('fighter')      
-  })
-  fighterIndex = fighterIndex.map(fighter => {
-    cells[fighter].classList.add('fighter')
-    return fighter + 1
-  })
-}
-
-function moveLeft () {
-  movingRight = false
-  fighterIndex = fighterIndex.forEach(fighter => {
-    console.log(fighter)
-    cells[fighter].classList.add('fighter')
-    return fighter + 1
-    // }
-  })
-}
 
 // * Fighter Fleet Movement
 function fighterMovement () { 
-  setInterval(() => {
-    // removeFighters()
-    moveRight()  
+  const movementId = setInterval(() => {
+    cells.forEach(cell => {
+      cell.classList.remove('fighter')      
+    })
+    fighterIndex = fighterIndex.map(fighter => {
+      if (cells.indexOf(cells[fighter]) > cells.length - (width)) {
+        playerLoses()
+        clearInterval(movementId)
+      } else {
+        cells[fighter].classList.add('fighter')
+        return fighter + 1
+      }
+    })
   }, 1000)
-  // where const x = fighterIndex % width
-  // move right till x < width - 1
-  // reachRightEdge = movingRight && x < width - 1
-  // move down 1 row
-  // move left until x > 0
-  // reachLeftEdge = !movingRight && x > 0
-  // move down 1 row 
-  // if x > 0 moveRight
-  // else if x < width - 1 moveleft
 }
 
 // * Bombing
 function fighterBomb() { 
-  // // generate random number from fighterIndex to assign bomber
-  // // release bomb
-  // hit player
-  // // miss player
   const bomberId = setInterval(() => {
-    
     const bomber = fighterIndex[Math.floor((Math.random() * fighterIndex.length))]
     if (cells[bomber].classList.contains('fighter')) {
       let bombPosition = cells.indexOf(cells[bomber])
@@ -140,21 +96,20 @@ function fighterBomb() {
 
           // Player Destruction Conditions & Outcomes
           if (cells[bombPosition].classList.contains('player')) {
-            clearInterval(bombId)
+            playerLoses()
           }
+        } else if (fighterIndex.length === 0){
+          clearInterval(bomberId)
+          
         } else {
           cells[bombPosition].classList.remove('bomb')
+          clearInterval(bombId)
         }
-        // }
       }, 1000)      
     }
-    
-    // clearInterval(bomberId)
-    // Player wins
+    console.log(fighterIndex.length)
   }, 2000)
 }
-fighterBomb()
-
 
 // ***** Player Functionality *****
 
@@ -162,9 +117,11 @@ fighterBomb()
 function addPlayer () {
   cells[playerPosition].classList.add('player')
 }
+
 function removePlayer () {
   cells[playerPosition].classList.remove('player')
 }
+
 function movePlayer (e) {  
   const x = playerPosition % width
   removePlayer()
@@ -184,11 +141,6 @@ function movePlayer (e) {
 }
 
 // * Shooting
-function updateScore(){
-  score.innerHTML = newScore
-  return score
-}
-
 function playerFire (e) {
   if (e.keyCode === 88) {  
     let laserPosition = playerPosition
@@ -212,8 +164,8 @@ function playerFire (e) {
           updateScore(newScore)
 
           if (fighterIndex.length === 0) {
-            console.log('game over')
-            // gameOver(playerWins)
+            playerWins()
+            clearInterval(laserId)
           }
 
         } 
@@ -224,12 +176,11 @@ function playerFire (e) {
     }, 500)
   }
 
-  //* Player Dies
-  // if (cells[playerPosition].classList.contains('fighter')) {
-  // Stop game, reset game, update lives with lives - 1
-  // } 
-  // Place gameplay inside a while loop with conditionals using isAlive
-  // isAlive = false
+  // * Scoring
+  function updateScore(){
+    score.innerHTML = newScore
+    return score
+  }
 
   // ***** Events *****
 }
