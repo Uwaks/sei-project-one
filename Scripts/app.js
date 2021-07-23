@@ -2,10 +2,11 @@
 const gameGrid = document.querySelector('.game-grid')
 const startBtn = document.querySelector('#start')
 const score = document.querySelector('#score span')
-const lifeCount = document.querySelector('#life-count span')
-const gameScreen = document.querySelector('#game-screen')
-const winner = document.querySelector('#game-won')
-const loser = document.querySelector('#game-lost')
+let lifeCount = document.querySelector('#life-count span')
+const gameScreen = document.querySelector('.game-screen')
+const winner = document.getElementById('game-won')
+const loser = document.getElementById('game-lost')
+const resetBtn = document.querySelector('.reset')
 const cells = []
 let newScore = 0
 
@@ -17,7 +18,7 @@ const cellCount = width * width
 function createGrid () {
   for (let i = 0; i < cellCount; i++) {
     const cell = document.createElement('div')
-    cell.textContent = i
+    // cell.textContent = i
     gameGrid.appendChild(cell)
     cells.push(cell)
   }  
@@ -55,11 +56,20 @@ function gameStart () {
 function playerWins () { 
   gameScreen.classList.add('no-show')
   winner.classList.remove('no-show')
+  resetBtn.classList.remove('no-show')
 }
 function playerLoses () {
   gameScreen.classList.add('no-show')
   loser.classList.remove('no-show')
+  resetBtn.classList.remove('no-show')
+  lifeCount = 0
 }
+
+// * Reset
+function resetGame () {
+  location.reload()
+}
+
 // ***** Alien Functionality *****
 
 // * Fighter Fleet Movement
@@ -84,7 +94,9 @@ function fighterMovement () {
 function fighterBomb() { 
   const bomberId = setInterval(() => {
     const bomber = fighterIndex[Math.floor((Math.random() * fighterIndex.length))]
-    if (cells[bomber].classList.contains('fighter')) {
+    if (fighterIndex.length < 1){
+      clearInterval(bomberId)
+    } else if (cells[bomber].classList.contains('fighter')) {
       let bombPosition = cells.indexOf(cells[bomber])
       const bombId = setInterval(() => { 
         const y = Math.floor(bombPosition / width)
@@ -98,16 +110,12 @@ function fighterBomb() {
           if (cells[bombPosition].classList.contains('player')) {
             playerLoses()
           }
-        } else if (fighterIndex.length === 0){
-          clearInterval(bomberId)
-          
         } else {
           cells[bombPosition].classList.remove('bomb')
           clearInterval(bombId)
         }
       }, 1000)      
     }
-    console.log(fighterIndex.length)
   }, 2000)
 }
 
@@ -185,5 +193,6 @@ function playerFire (e) {
   // ***** Events *****
 }
 startBtn.addEventListener('click', gameStart)
+resetBtn.addEventListener('click', resetGame)
 window.addEventListener('keyup', movePlayer)
 window.addEventListener('keydown', playerFire)

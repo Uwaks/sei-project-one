@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap');
+
 * {
   box-sizing: border-box;
 }
@@ -5,14 +7,27 @@
 body {
   height: 100vh;
   margin: 0;
+  /* position: relative; */
+  font-family: Play;
 }
 
 .controls-wrapper {
   height: 10%;
+  width: 100%;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: cyan;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+#start {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px 20px;
+  background-color: darkgoldenrod; 
 }
 
 .grid-wrapper {
@@ -21,7 +36,11 @@ body {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background-color: darkgoldenrod;
+  /* background-color: darkgoldenrod; */
+  position: relative;  
+  background-image: url('../assets/Wakanda_CW_HD.png');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .game-grid {
@@ -30,43 +49,63 @@ body {
   display: flex; 
   flex-wrap: wrap;
   margin: 40px 0px;
-  border: 5px solid lightgrey;
+  /* border: 5px solid lightgrey; */
 }
 
 .game-grid div {  
-  border: 1px solid lightgrey;
+  /* border: 1px solid lightgrey; */
   height: 10%;
   width: 10%;
 }
 
 .game-grid div.fighter {
-  /* background-image: url(''); 
+  background-image: url('../assets/MBaku-Mask-resized.png'); 
   background-repeat: no-repeat;
-  background-size: contain; */
-  background-color: darkred;
-  border-radius: 50%;
+  background-size: contain;
+  /* background-color: darkred;
+  border-radius: 50%; */
 } 
 
 .game-grid div.player {
-  /* background-image: url('');
+  background-image: url('../assets/black-panther-sprite.png');
   background-repeat: no-repeat;
-  background-size: contain; */
-  background-color: rgb(2, 59, 50);
-  border-radius: 10%;
+  background-size: contain;
+  /* background-color: rgb(2, 59, 50);
+  border-radius: 10%; */
 }
 
 .game-grid div.laser-beam {
-  background-color: blueviolet;
+  background-image: url('../assets/Claw.png');
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 .game-grid div.bomb {
-  background-color: salmon;
+  background-image: url('../assets/Mbaku-staff-nb.png');
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
+.game-over {
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+#game-won {
+  margin-top: 250px;
+}
+
+#game-lost {
+  margin-top: 250px;
+}
+
+.reset {
+  margin: auto;
+}
 .no-show {
   display: none;
 }
-
 
 
 
