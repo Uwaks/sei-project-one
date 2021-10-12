@@ -141,7 +141,7 @@ function fighterMovement () {
 }
 ```
 
-**Fleet Bombing** - I set up a function to randomly select a fighter from the fleet to release a bomb every 2000 milliseconds. The bombs movement was achieved by adding and removing the bomb class with a map method every 1000 milliseconds (using a setInterval method)
+**Fleet Bombing** - I set up a function to randomly select a fighter from the fleet to release a bomb every 2000 milliseconds. The bombs movement was achieved by adding and removing the bomb class with a map method every 1000 milliseconds (using a setInterval method).
 
 ```javascript
 function fighterBomb() { 
